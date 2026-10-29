@@ -1,0 +1,112 @@
+[
+ {
+  "source": "FBIL",
+  "file": "tbill_202609.json",
+  "status": "saved (294 records)"
+ },
+ {
+  "source": "FBIL",
+  "file": "tbill_202610.json",
+  "status": "saved (196 records)"
+ },
+ {
+  "source": "RBI",
+  "file": "prid_63767.html",
+  "status": "Money Market Operations as on October 08, 2026"
+ },
+ {
+  "source": "RBI",
+  "file": "prid_63787.html",
+  "status": "Money Market Operations as on October 10, 2026"
+ },
+ {
+  "source": "RBI",
+  "file": "prid_63788.html",
+  "status": "Money Market Operations as on October 11, 2026"
+ },
+ {
+  "source": "RBI",
+  "file": "prid_63794.html",
+  "status": "Money Market Operations as on October 12, 2026"
+ },
+ {
+  "source": "RBI",
+  "file": "prid_63801.html",
+  "status": "Money Market Operations as on October 13, 2026"
+ },
+ {
+  "source": "RBI",
+  "file": "prid_63808.html",
+  "status": "Money Market Operations as on October 14, 2026"
+ },
+ {
+  "source": "RBI",
+  "file": "prid_63815.html",
+  "status": "Money Market Operations as on October 15, 2026"
+ },
+ {
+  "source": "RBI",
+  "file": "prid_63824.html",
+  "status": "Money Market Operations as on October 16, 2026"
+ },
+ {
+  "source": "RBI",
+  "file": "prid_63826.html",
+  "status": "Money Market Operations as on October 17, 2026"
+ },
+ {
+  "source": "RBI",
+  "file": "prid_63827.html",
+  "status": "Money Market Operations as on October 18, 2026"
+ },
+ {
+  "source": "RBI",
+  "file": "prid_63834.html",
+  "status": "Money Market Operations as on October 19, 2026"
+ },
+ {
+  "source": "RBI",
+  "file": "prid_63836.html",
+  "status": "Money Market Operations as on October 20, 2026"
+ },
+ {
+  "source": "RBI",
+  "file": "prid_63842.html",
+  "status": "Money Market Operations as on October 21, 2026"
+ },
+ {
+  "source": "RBI",
+  "file": "prid_63849.html",
+  "status": "Money Market Operations as on October 22, 2026"
+ },
+ {
+  "source": "RBI",
+  "file": "prid_63865.html",
+  "status": "Money Market Operations as on October 24, 2026"
+ },
+ {
+  "source": "RBI",
+  "file": "prid_63866.html",
+  "status": "Money Market Operations as on October 25, 2026"
+ },
+ {
+  "source": "RBI",
+  "file": "prid_63869.html",
+  "status": "Money Market Operations as on October 26, 2026"
+ },
+ {
+  "source": "RBI",
+  "file": "prid_63874.html",
+  "status": "Money Market Operations as on October 27, 2026"
+ },
+ {
+  "source": "RBI",
+  "file": "prid_63879.html",
+  "status": "Money Market Operations as on October 28, 2026"
+ },
+ {
+  "source": "RBI",
+  "file": "prid 63755..63904",
+  "status": "scanned, 19 MMO releases saved"
+ }
+]

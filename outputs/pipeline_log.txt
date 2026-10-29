@@ -1,0 +1,83 @@
+/workspace/zeckathon-ps03/data/raw/amfi/amapr2020repo.xls: no unit text; relying on AUM-continuity unit check
+/workspace/zeckathon-ps03/data/raw/amfi/amjul2020repo.xls: no unit text; relying on AUM-continuity unit check
+/workspace/zeckathon-ps03/data/raw/amfi/amjun2020repo.xls: no unit text; relying on AUM-continuity unit check
+/workspace/zeckathon-ps03/data/raw/amfi/ammar2020repo.xls: no unit text; relying on AUM-continuity unit check
+/workspace/zeckathon-ps03/data/raw/amfi/ammay2020repo.xls: no unit text; relying on AUM-continuity unit check
+/workspace/zeckathon-ps03/data/raw/amfi/amsep2020repo.xls: no unit text; relying on AUM-continuity unit check
+panel (180, 12) 2019-04 2026-09
+origin 2022-03 (as_of 2022-04-08) done
+origin 2022-04 (as_of 2022-05-10) done
+origin 2022-05 (as_of 2022-06-09) done
+origin 2022-06 (as_of 2022-07-08) done
+origin 2022-07 (as_of 2022-08-08) done
+origin 2022-08 (as_of 2022-09-09) done
+origin 2022-09 (as_of 2022-10-10) done
+origin 2022-10 (as_of 2022-11-10) done
+origin 2022-11 (as_of 2022-12-09) done
+origin 2022-12 (as_of 2023-01-10) done
+origin 2023-01 (as_of 2023-02-09) done
+origin 2023-02 (as_of 2023-03-10) done
+origin 2023-03 (as_of 2023-04-13) done
+origin 2023-04 (as_of 2023-05-11) done
+origin 2023-05 (as_of 2023-06-09) done
+origin 2023-06 (as_of 2023-07-10) done
+origin 2023-07 (as_of 2023-08-09) done
+origin 2023-08 (as_of 2023-09-11) done
+origin 2023-09 (as_of 2023-10-11) done
+origin 2023-10 (as_of 2023-11-09) done
+origin 2023-11 (as_of 2023-12-08) done
+origin 2023-12 (as_of 2024-01-08) done
+origin 2024-01 (as_of 2024-02-08) done
+origin 2024-02 (as_of 2024-03-08) done
+origin 2024-03 (as_of 2024-04-10) done
+origin 2024-04 (as_of 2024-05-09) done
+origin 2024-05 (as_of 2024-06-10) done
+origin 2024-06 (as_of 2024-07-09) done
+origin 2024-07 (as_of 2024-08-09) done
+origin 2024-08 (as_of 2024-09-10) done
+origin 2024-09 (as_of 2024-10-10) done
+origin 2024-10 (as_of 2024-11-11) done
+origin 2024-11 (as_of 2024-12-10) done
+origin 2024-12 (as_of 2025-01-09) done
+origin 2025-01 (as_of 2025-02-12) done
+origin 2025-02 (as_of 2025-03-12) done
+origin 2025-03 (as_of 2025-04-11) done
+origin 2025-04 (as_of 2025-05-09) done
+origin 2025-05 (as_of 2025-06-10) done
+origin 2025-06 (as_of 2025-07-09) done
+origin 2025-07 (as_of 2025-08-11) done
+origin 2025-08 (as_of 2025-09-10) done
+origin 2025-09 (as_of 2025-10-13) done
+origin 2025-10 (as_of 2025-11-13) done
+origin 2025-11 (as_of 2025-12-13) done
+origin 2025-12 (as_of 2026-01-13) done
+origin 2026-01 (as_of 2026-02-13) done
+origin 2026-02 (as_of 2026-03-13) done
+origin 2026-03 (as_of 2026-04-13) done
+origin 2026-04 (as_of 2026-05-13) done
+origin 2026-05 (as_of 2026-06-13) done
+origin 2026-06 (as_of 2026-07-13) done
+origin 2026-07 (as_of 2026-08-13) done
+origin 2026-08 (as_of 2026-09-13) done
+{
+  "panel": {
+    "start": "2019-04",
+    "end": "2026-09",
+    "rows": 180
+  },
+  "test_targets": [
+    "2024-10",
+    "2026-09"
+  ],
+  "chosen_model_by_nested_selection": {
+    "Liquid Fund": "sarimax_cal",
+    "Overnight Fund": "lgbm_q_oosq"
+  },
+  "live_origin": "2026-09",
+  "live_as_of": "2026-10-13"
+}
+dashboard: /workspace/zeckathon-ps03/reports/dashboard.html
+
+real	1m52.797s
+user	10m41.866s
+sys	0m4.481s

@@ -1,0 +1,32 @@
+| Category | Model | h | MAE ₹cr | Pinball ₹cr | Cov80 | Cov95 |
+|---|---|---|---|---|---|---|
+| Liquid Fund | ets_ratio | 1 | 35,671 | 7,548 | 79% | 92% |
+| Liquid Fund | ets_ratio | 2 | 32,474 | 6,769 | 83% | 100% |
+| Liquid Fund | ets_ratio | 3 | 33,260 | 6,791 | 83% | 100% |
+| Liquid Fund | lgbm_q | 1 | 44,584 | 10,410 | 62% | 75% |
+| Liquid Fund | lgbm_q | 2 | 42,829 | 10,165 | 58% | 92% |
+| Liquid Fund | lgbm_q | 3 | 39,874 | 10,345 | 62% | 88% |
+| Liquid Fund | lgbm_q_oosq | 1 | 44,584 | 9,905 | 83% | 92% |
+| Liquid Fund | lgbm_q_oosq | 2 | 42,829 | 8,587 | 79% | 92% |
+| Liquid Fund | lgbm_q_oosq | 3 | 39,874 | 8,713 | 79% | 92% |
+| Liquid Fund | sarimax_cal | 1 | 28,056 | 6,419 | 79% | 96% |
+| Liquid Fund | sarimax_cal | 2 | 32,017 | 6,582 | 88% | 100% |
+| Liquid Fund | sarimax_cal | 3 | 33,652 | 6,688 | 79% | 100% |
+| Liquid Fund | snaive | 1 | 33,199 | 7,325 | 92% | 100% |
+| Liquid Fund | snaive | 2 | 33,199 | 7,232 | 92% | 100% |
+| Liquid Fund | snaive | 3 | 33,199 | 7,244 | 92% | 100% |
+| Overnight Fund | ets_ratio | 1 | 15,509 | 3,334 | 71% | 100% |
+| Overnight Fund | ets_ratio | 2 | 14,677 | 3,295 | 75% | 96% |
+| Overnight Fund | ets_ratio | 3 | 14,021 | 3,284 | 79% | 88% |
+| Overnight Fund | lgbm_q | 1 | 14,919 | 4,954 | 46% | 50% |
+| Overnight Fund | lgbm_q | 2 | 14,853 | 4,823 | 46% | 54% |
+| Overnight Fund | lgbm_q | 3 | 14,675 | 4,727 | 46% | 58% |
+| Overnight Fund | lgbm_q_oosq | 1 | 14,919 | 3,481 | 71% | 83% |
+| Overnight Fund | lgbm_q_oosq | 2 | 14,853 | 3,480 | 79% | 79% |
+| Overnight Fund | lgbm_q_oosq | 3 | 14,675 | 3,308 | 62% | 92% |
+| Overnight Fund | sarimax_cal | 1 | 13,604 | 3,047 | 79% | 96% |
+| Overnight Fund | sarimax_cal | 2 | 14,477 | 3,224 | 79% | 96% |
+| Overnight Fund | sarimax_cal | 3 | 14,061 | 3,244 | 79% | 88% |
+| Overnight Fund | snaive | 1 | 15,804 | 3,434 | 71% | 83% |
+| Overnight Fund | snaive | 2 | 15,804 | 3,429 | 71% | 83% |
+| Overnight Fund | snaive | 3 | 15,804 | 3,415 | 71% | 83% |

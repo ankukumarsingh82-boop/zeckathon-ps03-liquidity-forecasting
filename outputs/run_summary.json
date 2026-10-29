@@ -1,0 +1,26 @@
+{
+  "panel": {
+    "start": "2019-04",
+    "end": "2026-09",
+    "rows": 180
+  },
+  "test_targets": [
+    "2024-10",
+    "2026-09"
+  ],
+  "chosen_model_by_nested_selection": {
+    "Liquid Fund": "sarimax_cal",
+    "Overnight Fund": "lgbm_q_oosq"
+  },
+  "selection_window": [
+    "2024-10",
+    "2025-09"
+  ],
+  "eval_window": [
+    "2025-10",
+    "2026-09"
+  ],
+  "live_origin": "2026-09",
+  "run_finished_utc": "2026-10-29T12:05:50+00:00",
+  "live_as_of": "2026-10-13"
+}

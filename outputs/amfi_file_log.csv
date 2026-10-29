@@ -1,0 +1,103 @@
+file,month,engine,sha256,release_date,units_text,layout
+amapr2018repo.xls,2018-04,xlrd,d90e9115d6ce1ab9650778d90d6ffcb677a7bfa983a55562a2a49176be0dbd51,2018-05-07,` in Crore,pre-2019 sponsor-wise (no Liquid/Overnight category rows)
+ammay2018repo.xls,2018-05,xlrd,7ca6458b61b7c1423fabc7f84378b720b75734784e7f2d3bd02fa7357c9b45c0,2018-06-07,` in Crore,pre-2019 sponsor-wise (no Liquid/Overnight category rows)
+amjun2018repo.xls,2018-06,xlrd,5badc4e635296e5e343badf63b25098ecc885e8b83f0d61f79ba871d0a3bba38,2018-07-06,` in Crore,pre-2019 sponsor-wise (no Liquid/Overnight category rows)
+amjul2018repo.xls,2018-07,xlrd,de9c885bf888c665e74b81ebc4401df3f1e2c33a5fa204f66c7ed515e3aeba14,2018-08-07,` in Crore,pre-2019 sponsor-wise (no Liquid/Overnight category rows)
+amaug2018repo.xls,2018-08,xlrd,ba94a2186aea53ed006503a5395628ab08e027d48e103f764965bea8a5499d4d,2018-09-07,` in Crore,pre-2019 sponsor-wise (no Liquid/Overnight category rows)
+amsep2018repo.xls,2018-09,xlrd,b43158e5e02a820cd13d65cf30e0d2a9a17e1f78d3ca80d960e3f6054c119c9b,2018-10-08,` in Crore,pre-2019 sponsor-wise (no Liquid/Overnight category rows)
+amoct2018repo.xls,2018-10,xlrd,e12638299d62a79f2dc13d2be6861b09942a3b92c65b964593bb4eb1259bebb1,2018-11-09,` in Crore,pre-2019 sponsor-wise (no Liquid/Overnight category rows)
+amnov2018repo.xls,2018-11,xlrd,25e2a2118cb8dab25e5fa14225d2f493c060cef2d0bd813695aa8f0c1ec1f569,2018-12-07,` in Crore,pre-2019 sponsor-wise (no Liquid/Overnight category rows)
+amdec2018repo.xls,2018-12,xlrd,9fd5c4fc841c441eaef380de3f2822d971f8a314effa548d5c2e0bc81dcf6a47,,` in Crore,pre-2019 sponsor-wise (no Liquid/Overnight category rows)
+amjan2019repo.xls,2019-01,xlrd,00d2e39169d0b3cab3131c1796426343e849fe9f2d797c03f9ad9d8f9d05d8e4,,` in Crore,pre-2019 sponsor-wise (no Liquid/Overnight category rows)
+amfeb2019repo.xls,2019-02,xlrd,c116b759633a9157b241baa5f00c3b8d8ddb26adb71003d1406c4af2ccb876c6,,` in Crore,pre-2019 sponsor-wise (no Liquid/Overnight category rows)
+ammar2019repo.xls,2019-03,xlrd,46158df7da435a7d9b75081df49a37b44b85fb8b25c837cc6a5639de158a84bc,,` in Crore,pre-2019 sponsor-wise (no Liquid/Overnight category rows)
+amapr2019repo.xls,2019-04,openpyxl,2ad87cd3ee0654eb1bba0b1d8f9707559c322c2b2c5100b9e5ffc57fdbdfb141,2019-05-09,` in Crore,scheme-category
+ammay2019repo.xls,2019-05,openpyxl,e888facbdcfd53dd5aefaab8b90c250bfbbbbf7dedee516f88df4624508a2a09,,` in Crore,scheme-category
+amjun2019repo.xls,2019-06,openpyxl,fc01e1521a91a999c599d3d42f2c66eb6c81e9f09b39703223305fe96176d7df,2019-07-08,` in Crore,scheme-category
+amjul2019repo.xls,2019-07,openpyxl,7cd179c4333225bb75547dad6686b7d3d73ac2ad94f477d75acc2a7acc841b3a,2019-08-08,` in Crore,scheme-category
+amaug2019repo.xls,2019-08,openpyxl,658651b86393efb6e0ea5485c88bf03f6b6abc229e4eaa6620d4e74d3d64a3a1,2019-09-09,` in Crore,scheme-category
+amsep2019repo.xls,2019-09,openpyxl,0a45cab8fd3da01fb1cfc5883eae300f8a6d42034295c77e2d8c5cb03f164717,2019-10-09,` in Crore,scheme-category
+amoct2019repo.xls,2019-10,openpyxl,0bc435e99c83ec667185aade67df3f7f95aee94a80640739abd8f138672e3c45,2019-11-08,` in Crore,scheme-category
+amnov2019repo.xls,2019-11,openpyxl,099fe3ad3880d019c3690608936bc3a2090581fa2b23d9543e586bee1dfb0c7b,2019-12-09,` in Crore,scheme-category
+amdec2019repo.xls,2019-12,openpyxl,4eb0ac167f64bbe07f4f2f6ff9a3cdfcb79e431f36a6b1a06a2ee87c4639d8fa,2020-01-08,` in Crore,scheme-category
+amjan2020repo.xls,2020-01,openpyxl,2d86d519aef74fe24447d7a37a721311a6acbf3a5e19aeaefe25233b4f8a339f,,` in Crore,scheme-category
+amfeb2020repo.xls,2020-02,openpyxl,507eb974a616e73dc36a421ac8181a39b630e4c4c76359db7c309f8fcdda791c,2020-03-11,` in Crore,scheme-category
+ammar2020repo.xls,2020-03,openpyxl,fce0125f9e4882ef7757e53b36c7c25296f708ba9a2682d309bac50006a62d97,2020-04-09,MISSING (verified by AUM continuity),scheme-category
+amapr2020repo.xls,2020-04,openpyxl,c0b7875b455e7ef3708511312af2156aca8e6c904fb73baebacbbece88dac3d9,2020-05-08,MISSING (verified by AUM continuity),scheme-category
+ammay2020repo.xls,2020-05,openpyxl,a77562e2068fd7e7121614bc929e9f7db5cc8209127b12c3882297e981ab0bdf,2020-06-08,MISSING (verified by AUM continuity),scheme-category
+amjun2020repo.xls,2020-06,openpyxl,0ad53c21b56cf0930c49e0da8ef3f9575354ae698199b04ae6d9d68baa2a1413,2020-07-08,MISSING (verified by AUM continuity),scheme-category
+amjul2020repo.xls,2020-07,openpyxl,e987c57ad072755f24d2bbe205e7fec277cce5fd96fd400ed210faece1abad97,2020-08-10,MISSING (verified by AUM continuity),scheme-category
+amaug2020repo.xls,2020-08,openpyxl,2ad6dcdea0989bb90d76873f4ce6584805fe8446aee57bf24180ffda1d643767,2020-09-09,Rs. in crore,scheme-category
+amsep2020repo.xls,2020-09,openpyxl,76ad20a2143920ee25e7bd3a789bc45fa99e148b5015d4f8476e831559f772cb,2020-10-08,MISSING (verified by AUM continuity),scheme-category
+amoct2020repo.xls,2020-10,openpyxl,a58715a61792d9cc9ebfc981ba331e09b946503f01140488569b51f17005f5c5,2020-11-09,Rs. in Crore,scheme-category
+amnov2020repo.xls,2020-11,openpyxl,0162091a9f8a98e1f4943dfc0ca399c9f12d8d03224a6ac3743c91f8c65ec088,2020-12-08,Rs. in Crore,scheme-category
+amdec2020repo.xls,2020-12,openpyxl,b82b988dd52dfae3b32b512d147e5835b6f284e79a33767c951fa8167f56e081,2021-01-08,Rs. in Crore,scheme-category
+amjan2021repo.xls,2021-01,openpyxl,4fa6ef6846405c4ca035444e14164cbbae3499c6fb01584cdbf92c28ea0228ef,2021-02-09,Rs. in Crore,scheme-category
+amfeb2021repo.xls,2021-02,openpyxl,a24df714c82ef5ce8584ab12cc915f37baf05df03791694a7ddd88cea5b30fd4,2021-03-09,Rs. in Crore,scheme-category
+ammar2021repo.xls,2021-03,openpyxl,3b5478b8f00e9c24c187879d1f7d63a032901659b62c6a983a69e7f6f9891fcb,2021-04-08,Rs. in Crore,scheme-category
+amapr2021repo.xls,2021-04,openpyxl,c788eafe9a9109b63d4b437a62c523bfc27ddbb3f18e2498cce03299b4255aea,2021-05-11,Rs. in Crore,scheme-category
+ammay2021repo.xls,2021-05,openpyxl,f623375c89f25ad4280d77aaf9dbb94197f6cdf25647c98d9ff45c48bf840228,2021-06-09,INR in crore,scheme-category
+amjun2021repo.xls,2021-06,openpyxl,1c82daabb565d3f31feccf440dac1a6c8cc2556e7b96bc58494b353abec74604,2021-07-08,INR in crore,scheme-category
+amjul2021repo.xls,2021-07,openpyxl,bfcbac44fc36b17d82ca48cf2713e072e36c70622576ba73f10e1ef4779b5252,2021-08-09,INR in crore,scheme-category
+amaug2021repo.xls,2021-08,openpyxl,4c4a2acb40df74d7039c86b952774fc08ed97b91ca636ae6c0d7da43380fd3c8,2021-09-08,INR in crore,scheme-category
+amsep2021repo.xls,2021-09,openpyxl,9b89016b1b0afe848834f3a296f1f71fb6ed10a3633e58f15ade3032c6cca109,2021-10-08,INR in crore,scheme-category
+amoct2021repo.xls,2021-10,openpyxl,9fdd11b69ce64ea3360d9e61907c0a7e8b8509689d19b41400ab0b198ba6690f,2021-11-10,INR in crore,scheme-category
+amnov2021repo.xls,2021-11,openpyxl,56e142a9008fde774c0857bf225503943c0f0fbd592b48c3ca0cdb33fc81f23e,2021-12-09,INR in crore,scheme-category
+amdec2021repo.xls,2021-12,openpyxl,d23ea1addde7f1799963274cd26a9c9bdd37cbe83df89647fadb432a2279bc37,,INR in crore,scheme-category
+amjan2022repo.xls,2022-01,openpyxl,74c04b54547a0a61b733b35f2a3090d7abfb072affb1ae5965df62a916303cff,2022-02-09,INR in crore,scheme-category
+amfeb2022repo.xls,2022-02,openpyxl,3d3f10f744a1833834334276e2fdbfd96eba4e30ad335658d64953f44c6288c8,2022-03-09,INR in crore,scheme-category
+ammar2022repo.xls,2022-03,openpyxl,a432e16a37a97a2e1e4a8217e6f49d587b96100be36e98cf4b0c782b31012326,2022-04-08,INR in crore,scheme-category
+amapr2022repo.xls,2022-04,openpyxl,f57f69b8eae3b7804c8fd8cc876b20374d6ba01129829b1dcebd64012c4bef12,2022-05-10,INR in crore,scheme-category
+ammay2022repo.xls,2022-05,openpyxl,4afc63b97147911c499d5660c543fe5a1a0ada60f9779d9355010373388df87c,2022-06-09,INR in crore,scheme-category
+amjun2022repo.xls,2022-06,openpyxl,d7380f3d9e594d51417955fcbeb138626ffce36357b8671594f5122c0df24c8e,2022-07-08,INR in crore,scheme-category
+amjul2022repo.xls,2022-07,openpyxl,6455972680d2eae419df011b645143b00039e4d7a3ded975a131ff14e6fa1654,2022-08-08,INR in crore,scheme-category
+amaug2022repo.xls,2022-08,openpyxl,e87ca9dab1c38866d64cd8bdcbdc114d511f27b524f0672744420770da2d13cd,2022-09-09,INR in crore,scheme-category
+amsep2022repo.xls,2022-09,openpyxl,48dc3a01a8b57b08e8c91fe92a13c42a1630ef07bf4858055a7dcaf3194d4eb0,2022-10-10,INR in crore,scheme-category
+amoct2022repo.xls,2022-10,openpyxl,96f18a60310af10bbc5c74fe71991b07a9ef0b2042264c196d04ec94c3a2e13f,2022-11-10,INR in crore,scheme-category
+amnov2022repo.xls,2022-11,openpyxl,939f41ca3aa2daf6ae0a8452b69fd4858bf532463a3bd109f1a392836033320c,2022-12-09,INR in crore,scheme-category
+amdec2022repo.xls,2022-12,openpyxl,c41049a7c2a6cb61f393d7005aa24f8ec27461f1547409b0cf56603e2a587f47,2023-01-10,INR in crore,scheme-category
+amjan2023repo.xls,2023-01,openpyxl,b9faae46e8d6882f3c65924ff2cebd905bdc672031c827a7d56ca4e441605f5b,2023-02-09,INR in crore,scheme-category
+amfeb2023repo.xls,2023-02,openpyxl,563d4a82fcbed6a76be5902578576f299d953a69b568144196a61d57a1781fdf,2023-03-10,INR in crore,scheme-category
+ammar2023repo.xls,2023-03,openpyxl,bc8f8d9aba52d1dfeb6ddc135d02d3a9bebd232bc3cab64fc1b70d632c68eb9a,2023-04-13,INR in crore,scheme-category
+amapr2023repo.xls,2023-04,openpyxl,607a576bd9243e6fce3834d28944ecc882d4c19fa9127765ccea16151b894e2d,2023-05-11,INR in crore,scheme-category
+ammay2023repo.xls,2023-05,openpyxl,5e972f6f92fdad761230ea7b77559227b9231504a630afcc4bef67ff151e0b63,2023-06-09,INR in crore,scheme-category
+amjun2023repo.xls,2023-06,openpyxl,7010028cd2d533f8f66a1eb64bd63239ec1c7fb64ab0dc68f0742d3731dff659,2023-07-10,INR in crore,scheme-category
+amjul2023repo.xls,2023-07,openpyxl,40cfa0980810d470e5df8717dbc3b21dd04c6b661e1b9e80dce156924ec34268,2023-08-09,INR in crore,scheme-category
+amaug2023repo.xls,2023-08,openpyxl,f52a8ba9faa3e8f5c38a8dfb997723121d8705c59a87c9de29f9869d9f9de313,2023-09-11,INR in crore,scheme-category
+amsep2023repo.xls,2023-09,openpyxl,8eced5bf30c01e7b4bcaebadd11b439f7e0515d23858480c1fc2f947e928fd02,2023-10-11,INR in crore,scheme-category
+amoct2023repo.xls,2023-10,openpyxl,55d812cfe0be2c2d1a87f4caa55b76f3b6d6b489fa0f1538eb6987d5ded3fb02,2023-11-09,INR in crore,scheme-category
+amnov2023repo.xls,2023-11,openpyxl,b6252edc83572eb884dc4f9052d9684ba2182364524e4da3e1f5098ccab41a1b,2023-12-08,INR in crore,scheme-category
+amdec2023repo.xls,2023-12,openpyxl,780beba0ab5eca5f955711f247b3dcc71300a75b8717b8f77bd9a17fc2d785a2,2024-01-08,INR in crore,scheme-category
+amjan2024repo.xls,2024-01,openpyxl,0bebdd5615ce5850b293d556b8c6c082e36aecb169e51b82f1b853fb49d89d6a,2024-02-08,INR in crore,scheme-category
+amfeb2024repo.xls,2024-02,openpyxl,886876b87fde924c40e860f5b7c4d7e5f5bb423dbc6985c6f42a4912bf31488f,2024-03-08,INR in crore,scheme-category
+ammar2024repo.xls,2024-03,openpyxl,6dc53fd2bf89be82700810b2d994b72c19d0fb7584b1db2e5c77014ab7d4bba5,2024-04-10,INR in crore,scheme-category
+amapr2024repo.xls,2024-04,openpyxl,1081268e755a6f091a9c594ca70a73fae70d15f40ef52c35bbbc9e81d3c5f11c,2024-05-09,INR in crore,scheme-category
+ammay2024repo.xls,2024-05,openpyxl,dcf313205fc436e61dcc6afe196cf3f2096a81680c765457f236a69114d0303a,2024-06-10,INR in crore,scheme-category
+amjun2024repo.xls,2024-06,openpyxl,5a71aa448e089dc69d9910587f19b82f2b9d8f3e7744cab7720d57638fe1f536,2024-07-09,INR in crore,scheme-category
+amjul2024repo.xls,2024-07,openpyxl,482b8720a34fe3433803d28ce3e649e5b3288b2b518f0fa334836930fe24d90b,2024-08-09,INR in crore,scheme-category
+amaug2024repo.xls,2024-08,openpyxl,a512515a3fadaef0cfd55aa9c51fee9afc667e55da22e5c550103a10d48db51a,2024-09-10,INR in crore,scheme-category
+amsep2024repo.xls,2024-09,openpyxl,46c6a1fdebe4aa81dcf84e6f6b9f5259f15fd9f7cf9778ea14e06ba209dc26d0,2024-10-10,INR in crore,scheme-category
+amoct2024repo.xls,2024-10,openpyxl,bbe62f0592cd7e2c32e090d653ecda66a2ae619c9dbea602d0ef5d939cbb4fc8,2024-11-11,INR in crore,scheme-category
+amnov2024repo.xls,2024-11,openpyxl,8252b0ea4b84e2c2b944ecf5f02f8f902756e181ffd4bc6fd72b86963d5e504d,2024-12-10,INR in crore,scheme-category
+amdec2024repo.xls,2024-12,openpyxl,c22415512d907d1185f54d184ab3530cd3bf6a02ec45fb424b149f76dbae1f8c,2025-01-09,INR in crore,scheme-category
+amjan2025repo.xls,2025-01,openpyxl,e725b6cb6f61a94228ff2b6330f6037fad4332b42fb784eed9fd187d883a3572,2025-02-12,INR in crore,scheme-category
+amfeb2025repo.xls,2025-02,openpyxl,535cc2410869d4aa8b648fda56fb635f065de14f4650d730f70628d2a18ab77f,2025-03-12,INR in crore,scheme-category
+ammar2025repo.xls,2025-03,openpyxl,049414a9e1c7a54e1c3769cab3fb2c22f68f3c0efc8e36cbfc0b3cf90327036d,2025-04-11,INR in crore,scheme-category
+amapr2025repo.xls,2025-04,openpyxl,f0c8183a20bc2f047fa73d26877c2ab0d4d40569d679854c1f97eecf68321bf2,2025-05-09,INR in crore,scheme-category
+ammay2025repo.xls,2025-05,openpyxl,a155113e6c54fc2b8048568c17ecde32460758a765d5162f3ee8851a342a1bf6,2025-06-10,INR in crore,scheme-category
+amjun2025repo.xls,2025-06,openpyxl,4ded1c5d6c173f1252c1897e6ddc98e6cabb080592ef541c452ec4a30d82e6b2,2025-07-09,INR in crore,scheme-category
+amjul2025repo.xls,2025-07,xlrd,70902777bdd5d77d60fb7e4898f376a809f3000d761e7eb6e7afe8f9e3e81959,2025-08-11,INR in crore,scheme-category
+amaug2025repo.xls,2025-08,xlrd,381cafbb797e3e038ee4693f54648cb36075cf44cbafd8ee0054208ebb2ea2fb,2025-09-10,INR in crore,scheme-category
+amsep2025repo.xls,2025-09,xlrd,9a9102d47f13da887a14f33f961b2f5658638f1c16d46aef0537df28c62aeffd,,INR in crore,scheme-category
+amoct2025repo.xls,2025-10,xlrd,3f3b33767ac5d30a213788c9250f7c643a449b9287559dad8f82a46fa01337f3,,INR in crore,scheme-category
+amnov2025repo.xls,2025-11,xlrd,f0c26f74d9e85ae6654fee574ddcc5c0288de5fdd3ea4006a80f3716d2f61222,,INR in crore,scheme-category
+amdec2025repo.xls,2025-12,xlrd,df19c76894573821b8fdcbe5a6c6fa1a2760a271b25e9139313fd25bb509858c,,INR in crore,scheme-category
+amjan2026repo.xls,2026-01,xlrd,0f73d3d998b4582b8ab0f280e226ad56ac0d08a1a2c2ad85e8009084fc2dcf43,,INR in crore,scheme-category
+amfeb2026repo.xls,2026-02,xlrd,5bb8409e631ccaa28fdee04ccd744530a31a697bae1fec88ed4e827acfe68548,,INR in crore,scheme-category
+ammar2026repo.xls,2026-03,xlrd,bd29dbafc209b7f699c4544ec1f776b7674f9749fb800ae0d2178c8115cf948b,,INR in crore,scheme-category
+amapr2026repo.xls,2026-04,xlrd,d7562a27597ff486063b6639cc1a342133797d602e2d29bb4d5202e0b64e96cb,,INR in crore,scheme-category
+ammay2026repo.xls,2026-05,xlrd,6ec4934284b5b0876236340a98c524c29d1d93f53e9a1a5d4746bad297a717d2,,INR in crore,scheme-category
+amjun2026repo.xls,2026-06,xlrd,f5d21f9dd6a1b6a9644758b56971479172b9cec45ec1b406114e8f791ab589d3,,INR in crore,scheme-category
+amjul2026repo.xls,2026-07,xlrd,8d644b225ff916c942e968c2af83bae9c98a506dd6ae8e3c3521df3b735cdb1e,,INR in crore,scheme-category
+amaug2026repo.xls,2026-08,xlrd,70f3aa61dadcd6867b296aeabb7ff545c052a9f23ff705aa656c651c43f8a787,,INR in crore,scheme-category
+amsep2026repo.xls,2026-09,xlrd,b1daaaf1a8c71260c10e9056272bebf7f3367559ac66d5ad5d6d0ec8a9f09967,,INR in crore,scheme-category
