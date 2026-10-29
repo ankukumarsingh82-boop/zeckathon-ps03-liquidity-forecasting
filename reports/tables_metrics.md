@@ -1,4 +1,4 @@
-| Category | Model | MAPE % | MAPE excl. abs(y)<2k cr % | Median APE % | sMAPE % | MAE ₹cr | MASE | Pinball (core) ₹cr | Cov80 [Wilson] | Cov95 [Wilson] | Cost q75 ₹cr (vs base) | Cost q95 ₹cr (vs base) |
+| Category | Model | MAPE % | MAPE excl. abs(y)<2k cr % | Median APE % | sMAPE % | MAE ₹cr | MASE | Pinball (core) ₹cr | Cov80 [Wilson] | Cov95 [Wilson] | Cost q75 (a) ₹cr (vs base) | Cost q95 (a) ₹cr (vs base) |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|
 | Liquid Fund | sarimax_cal_oosq | 115 | 76 | 49 | 81 | 31,242 | 0.78 | 6,561 | 72% [61%,81%] | 96% [88%,99%] | 53.3 (-21%) | 85.3 (+27%) |
 | Liquid Fund | sarimax_cal | 115 | 76 | 49 | 81 | 31,242 | 0.78 | 6,563 | 82% [72%,89%] | 99% [93%,100%] | 50.0 (-26%) | 114.3 (+70%) |
