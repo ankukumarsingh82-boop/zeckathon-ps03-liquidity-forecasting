@@ -4,6 +4,7 @@
     python -m liqfc validate                ingest + validate only
     python -m liqfc refresh [--no-rbi] [--no-run]   fetch new official data, then rerun the pipeline
     python -m liqfc app [--port 8501]       launch the interactive local dashboard (Streamlit, localhost only)
+    python -m liqfc docs                    rebuild reports/report.md, figures, report.pdf and deck.pdf from outputs/
     python -m liqfc test                    run the pytest suite
 """
 from __future__ import annotations
@@ -38,7 +39,14 @@ def cmd_run(a):
     from .pipeline import main
     main(skip_backtest=a.skip_backtest)
     runpy.run_path(str(ROOT / "scripts/report_tables.py"), run_name="__main__")
+    runpy.run_path(str(ROOT / "scripts/build_report.py"), run_name="__main__")
     runpy.run_path(str(ROOT / "scripts/build_manifest.py"), run_name="__main__")
+
+
+def cmd_docs(_):
+    runpy.run_path(str(ROOT / "scripts/report_tables.py"), run_name="__main__")
+    runpy.run_path(str(ROOT / "scripts/build_report.py"), run_name="__main__")
+    runpy.run_path(str(ROOT / "scripts/build_docs.py"), run_name="__main__")
 
 
 def cmd_refresh(a):
@@ -69,6 +77,7 @@ def main(argv=None):
     sub = p.add_subparsers(dest="cmd")
     r = sub.add_parser("run"); r.add_argument("--skip-backtest", action="store_true", help="reuse outputs/forecasts_backtest_full.csv")
     sub.add_parser("validate")
+    sub.add_parser("docs", help="rebuild report.md, figures, report.pdf, deck.pdf")
     f = sub.add_parser("refresh"); f.add_argument("--no-rbi", action="store_true"); f.add_argument("--no-run", action="store_true")
     ap = sub.add_parser("app"); ap.add_argument("--port", type=int); ap.add_argument("--address", default="127.0.0.1")
     t = sub.add_parser("test", help="run pytest; extra args are passed through")
@@ -78,7 +87,7 @@ def main(argv=None):
     a.pytest_args = extra
     if a.cmd is None:
         a = p.parse_args(["run"])
-    {"run": cmd_run, "validate": cmd_validate, "refresh": cmd_refresh, "app": cmd_app, "test": cmd_test}[a.cmd](a)
+    {"run": cmd_run, "validate": cmd_validate, "refresh": cmd_refresh, "app": cmd_app, "test": cmd_test, "docs": cmd_docs}[a.cmd](a)
 
 
 if __name__ == "__main__":
