@@ -46,9 +46,11 @@ def monthly_spread(drivers: pd.DataFrame, mode: str, floor_pct: float, const_pct
 
 def recompute_costs(fc: pd.DataFrame, actuals: pd.DataFrame, drivers: pd.DataFrame, tau: float, h: int,
                     spread_mode: str = "realised", floor_pct: float = 0.10, const_pct: float = 0.50,
-                    penalty: float = 3.0) -> pd.DataFrame:
+                    penalty: float = 3.0, penalty_basis: str = "spread") -> pd.DataFrame:
     """Per (model, category, target) cost of the tau-buffer policy and of the same-month-last-year baseline,
     from backtest forecasts (outputs/forecasts_backtest.csv) and actual flows (outputs/actuals.csv)."""
+    if penalty_basis not in ("spread", "amount"):
+        raise ValueError("penalty_basis must be 'spread' or 'amount'")
     f = fc[fc["h"] == h].copy()
     act = actuals.set_index(["month", "category"])["net"]
     spr = monthly_spread(drivers, spread_mode, floor_pct, const_pct)
@@ -60,7 +62,8 @@ def recompute_costs(fc: pd.DataFrame, actuals: pd.DataFrame, drivers: pd.DataFra
     k = f["spread_pct"] / 100 / 12
     for pre, b in [("", f["buffer"]), ("baseline_", f["baseline_buffer"])]:
         f[pre + "idle_cost"] = np.maximum(0.0, b - f["outflow"]) * k
-        f[pre + "shortfall_cost"] = penalty * np.maximum(0.0, f["outflow"] - b) * k
+        # reading (a) "spread": 3 x shortfall x spread/12 ; reading (b) "amount": 3 x shortfall in rupees
+        f[pre + "shortfall_cost"] = penalty * np.maximum(0.0, f["outflow"] - b) * (k if penalty_basis == "spread" else 1.0)
         f[pre + "total_cost"] = f[pre + "idle_cost"] + f[pre + "shortfall_cost"]
         f[pre + "breach"] = (f["outflow"] > b).astype(int)
     return f[["model", "category", "target", "h", "buffer", "baseline_buffer", "outflow", "actual", "spread_pct",

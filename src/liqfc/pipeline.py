@@ -13,7 +13,7 @@ import yaml
 ROOT = Path(__file__).resolve().parents[2]
 from .amfi import load_amfi, validate_panel  # noqa: E402
 from .backtest import all_targets, info_set, oos_calibrate, run_backtest  # noqa: E402
-from .decision import buffer_from_quantiles, evaluate_policies, paired_vs_baseline, spread_series  # noqa: E402
+from .decision import PENALTY_BASES, buffer_from_quantiles, evaluate_policies, paired_vs_baseline, spread_series  # noqa: E402
 from .drivers import calendar_driver_regression  # noqa: E402
 from .macro import build_monthly_drivers  # noqa: E402
 from .metrics import summarize  # noqa: E402
@@ -101,22 +101,25 @@ def main(skip_backtest=False, log=print):
     # ---------------- decision layer
     dc = cfg["decision"]
     dec_frames = []
-    for hz in sorted({dc["decision_horizon"], 1}):
-        for sp_name, const in [("fbil3m_minus_wacr", None), ("const_%.2f" % dc["sensitivity_constant_spread_pct"], dc["sensitivity_constant_spread_pct"])]:
-            d = evaluate_policies(ft, panel, drivers, hz, taus, dc["policy_quantiles"], dc["penalty_multiplier"],
-                                  dc["spread_floor_pct"], const)
-            dec_frames.append(d.assign(decision_h=hz, spread_basis=sp_name))
+    for pb in PENALTY_BASES:  # "spread" = primary reading (a); "amount" = reading (b), 3x the shortfall in rupees
+        for hz in sorted({dc["decision_horizon"], 1}):
+            for sp_name, const in [("fbil3m_minus_wacr", None), ("const_%.2f" % dc["sensitivity_constant_spread_pct"], dc["sensitivity_constant_spread_pct"])]:
+                d = evaluate_policies(ft, panel, drivers, hz, taus, dc["policy_quantiles"], dc["penalty_multiplier"],
+                                      dc["spread_floor_pct"], const, penalty_basis=pb)
+                dec_frames.append(d.assign(penalty_basis=pb, decision_h=hz, spread_basis=sp_name))
     dec = pd.concat(dec_frames, ignore_index=True)
     dec.to_csv(OUT / "decision_costs_detail.csv", index=False)
-    dsum = (dec.groupby(["decision_h", "spread_basis", "category", "model", "policy"])
+    dsum = (dec.groupby(["penalty_basis", "decision_h", "spread_basis", "category", "model", "policy"])
             .agg(total_cost_cr=("total_cost", "sum"), idle_cost_cr=("idle_cost", "sum"), shortfall_cost_cr=("shortfall_cost", "sum"),
                  breaches=("breach", "sum"), n=("breach", "size"), mean_buffer_cr=("buffer", "mean"),
                  shortfall_amt_cr=("shortfall_amt", "sum")).reset_index())
-    base = dsum[dsum["policy"] == "smly_baseline"][["decision_h", "spread_basis", "category", "total_cost_cr"]].rename(columns={"total_cost_cr": "baseline_cost_cr"})
-    dsum = dsum.merge(base, on=["decision_h", "spread_basis", "category"])
+    base = dsum[dsum["policy"] == "smly_baseline"][["penalty_basis", "decision_h", "spread_basis", "category", "total_cost_cr"]].rename(columns={"total_cost_cr": "baseline_cost_cr"})
+    dsum = dsum.merge(base, on=["penalty_basis", "decision_h", "spread_basis", "category"])
     dsum["cost_vs_baseline_pct"] = 100 * (dsum["total_cost_cr"] / dsum["baseline_cost_cr"] - 1)
     dsum.to_csv(OUT / "decision_costs.csv", index=False)
-    paired_vs_baseline(dec).to_csv(OUT / "decision_vs_baseline_bootstrap.csv", index=False)
+    # bootstrap per penalty basis with its own seed, so the primary-reading CIs do not depend on the extra reading
+    pd.concat([paired_vs_baseline(dec[dec.penalty_basis == pb].drop(columns="penalty_basis")).assign(penalty_basis=pb)
+               for pb in PENALTY_BASES], ignore_index=True).to_csv(OUT / "decision_vs_baseline_bootstrap.csv", index=False)
 
     # ---------------- driver analysis (descriptive, in-sample, HAC) + robustness for rate-regime breaks
     reg = calendar_driver_regression(panel, drivers)
