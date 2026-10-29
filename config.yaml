@@ -1,0 +1,48 @@
+# Zeckathon PS 03 - pipeline configuration (frozen before backtest; no tuning on the test window)
+data:
+  amfi_raw_dir: data/raw/amfi
+  categories: ["Liquid Fund", "Overnight Fund"]
+  panel_start: "2019-04"          # first month AMFI reports Liquid and Overnight as separate SEBI categories
+  release_lag_default_days: 13    # used when a workbook has no "Released on" stamp (max observed lag)
+  identity_tol_crore: 0.1         # |sales - redemption - net| tolerance
+backtest:
+  n_test_months: 24               # last 24 monthly releases are the evaluation targets
+  horizons: [1, 2, 3]
+  min_train_months: 36
+quantiles: [0.025, 0.05, 0.1, 0.25, 0.5, 0.75, 0.9, 0.95, 0.975]
+core_quantiles: [0.025, 0.1, 0.5, 0.9, 0.975]   # quantiles defining the 80% / 95% PIs + median, used for headline pinball
+mape_small_threshold_crore: 2000  # sensitivity: MAPE excluding |actual| below this
+models: [snaive, snaive_ratio, ets_ratio, sarimax_cal, lgbm_q]
+ablation_models: [lgbm_q_calonly, lgbm_q_no_rates, lgbm_q_no_liq, lgbm_q_no_equity]   # driver analysis (out-of-sample)
+calibration:
+  oos_min_n: 12                   # min past OOS errors (same model/category/h) before an OOS-quantile PI is issued
+selection:                        # nested: choose on first 12 test targets, report on last 12 (no tuning on eval window)
+  select_months: auto             # auto = first half of the 24-month test window (currently 2024-10..2025-09)
+  eval_months: auto               # auto = second half (currently 2025-10..2026-09); or give ["YYYY-MM","YYYY-MM"]
+  criterion: pinball_core_cr
+live:
+  origin: latest                  # latest AMFI month on disk (currently 2026-09), or "YYYY-MM"
+lgbm:                              # fixed a priori, not tuned on the test window
+  n_estimators: 300
+  learning_rate: 0.03
+  num_leaves: 4
+  min_data_in_leaf: 8
+  feature_fraction: 0.8
+  bagging_fraction: 0.8
+  bagging_freq: 1
+  lambda_l2: 1.0
+  seed: 42
+decision:
+  decision_horizon: 2             # buffer for month M is set on day 1 of M; latest AMFI release then is M-2
+  penalty_multiplier: 3.0
+  policy_quantiles: [0.75, 0.95]  # 0.95 = spec example; 0.75 = newsvendor critical ratio 3/(3+1), both fixed a priori
+  spread_floor_pct: 0.10          # idle-cash spread floor (% p.a.) so that idle cash never has zero/negative cost
+  sensitivity_constant_spread_pct: 0.50
+app:
+  port: 8501
+refresh:                           # official public sources only, no API keys
+  amfi_url: "https://www.amfiindia.com/spages/am{mon}{yyyy}repo.xls"
+  nse_url: "https://nsearchives.nseindia.com/content/indices/ind_close_all_{ddmmyyyy}.csv"
+  fbil_url: "https://www.fbil.org.in/wasdm/tbill/fetchfiltered?fromDate={a}&toDate={b}&authenticated=false"
+  rbi_press_url: "https://www.rbi.org.in/scripts/BS_PressReleaseDisplay.aspx?prid={prid}"
+  rbi_prid_scan: 150               # press-release ids scanned beyond the latest one on disk
