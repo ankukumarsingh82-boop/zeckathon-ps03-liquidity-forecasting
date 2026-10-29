@@ -11,7 +11,7 @@ dist/
 # Scratch
 *.tmp
 *.log.bak
-# data/raw IS committed on purpose: 18 MB / ~340 files of official downloads (AMFI, RBI, FBIL, NSE) with sha256 in
+# data/raw IS committed on purpose: ~18 MB of official downloads (one MANIFEST row per file) (AMFI, RBI, FBIL, NSE) with sha256 in
 # data/raw/MANIFEST.csv. Source archives change or disappear (AMFI URLs, RBI press-release ids), so committing them is
 # the only way a fresh clone reproduces every number byte-for-byte. No single file exceeds 1 MB.
 # outputs/ and reports/ are committed too, so a clone can be diffed against a fresh `python -m liqfc run`.

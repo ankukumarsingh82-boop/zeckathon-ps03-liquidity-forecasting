@@ -1,5 +1,9 @@
-"""Write data/raw/MANIFEST.csv: one row per raw file with source, URL, retrieval time (file mtime, UTC + IST),
-units, period, sha256 and status notes."""
+"""Write data/raw/MANIFEST.csv: one row per raw file with source, URL, retrieval time (UTC + IST),
+units, period, sha256 and status notes.
+
+Retrieval time is recorded once. If a file already has a MANIFEST row with the same sha256, its recorded time is kept;
+only new or changed files get their file mtime. So `liqfc run` in a fresh clone (where every mtime is the checkout
+time) leaves MANIFEST.csv byte-identical."""
 import csv
 import datetime as dt
 import hashlib
@@ -18,12 +22,21 @@ UNUSABLE = {"r151_major_monetary_policy_rates_and_reserve_requirements_bank.csv"
             "yield_tb_rn.csv": "cross-check only (SGL T-bill yields, ends 2026-06)"}
 
 
+MANIFEST = RAW / "MANIFEST.csv"
+PREV = {r["file"]: r for r in csv.DictReader(open(MANIFEST, newline=""))} if MANIFEST.exists() else {}
+
+
 def row(p: Path, source, url, units, period, notes=""):
     b = p.read_bytes()
-    t = dt.datetime.fromtimestamp(p.stat().st_mtime, dt.timezone.utc)
-    return {"file": str(p.relative_to(ROOT)), "source": source, "url": url, "retrieved_utc": t.isoformat(timespec="seconds"),
-            "retrieved_ist": t.astimezone(IST).isoformat(timespec="seconds"), "units": units, "period": period,
-            "bytes": len(b), "sha256": hashlib.sha256(b).hexdigest(), "notes": notes}
+    sha, rel = hashlib.sha256(b).hexdigest(), str(p.relative_to(ROOT))
+    old = PREV.get(rel)
+    if old and old["sha256"] == sha:
+        utc, ist = old["retrieved_utc"], old["retrieved_ist"]
+    else:
+        t = dt.datetime.fromtimestamp(p.stat().st_mtime, dt.timezone.utc)
+        utc, ist = t.isoformat(timespec="seconds"), t.astimezone(IST).isoformat(timespec="seconds")
+    return {"file": rel, "source": source, "url": url, "retrieved_utc": utc, "retrieved_ist": ist, "units": units, "period": period,
+            "bytes": len(b), "sha256": sha, "notes": notes}
 
 
 rows = []
@@ -58,6 +71,6 @@ for d, src, units in [("nse", "NSE official index close archive", "index points"
             continue
         r = log.get(p.name)
         rows.append(row(p, src, r[1] if r else "", units, p.stem.split("_")[-1], f"fetch_log: {r[-1]}" if r else ""))
-with open(RAW / "MANIFEST.csv", "w", newline="") as f:
+with open(MANIFEST, "w", newline="") as f:
     w = csv.DictWriter(f, fieldnames=list(rows[0])); w.writeheader(); w.writerows(rows)
 print(len(rows), "rows")
