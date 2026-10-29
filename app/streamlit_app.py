@@ -14,6 +14,7 @@ import streamlit as st
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
+from liqfc.claims import BASIS_LABEL, flip_sentence, q75_vs_q95  # noqa: E402
 from liqfc.appcore import buffers, coverage_table, cost_curve, cost_summary, load_outputs, recompute_costs  # noqa: E402
 
 OUT = ROOT / "outputs"
@@ -45,14 +46,19 @@ chosen = S["chosen_model_by_nested_selection"]
 st.sidebar.header("Decision settings")
 tau = st.sidebar.slider("Buffer quantile τ (of outflow)", 0.50, 0.975, 0.75, 0.025, key="tau",
                         help="0.75 = newsvendor optimum for a 3:1 shortfall:idle penalty; 0.95 = spec example")
-h_dec = st.sidebar.selectbox("Decision horizon h (day-1 of M uses release M-2 → h=2)", [1, 2, 3], index=1, key="h")
+h_dec = st.sidebar.selectbox("Decision horizon h (day-1 of M uses release M-2 → h=2)", [1, 2, 3], index=1, key="h",
+                             format_func=lambda h: f"h={h}" + (" (oracle timing: release M-1 arrives after day 1, not feasible live)" if h == 1 else ""))
 spread_mode = st.sidebar.radio("Idle-cash spread", ["realised", "constant"], key="spread_mode",
                                format_func=lambda x: "Realised FBIL 3M T-bill − WACR (floored)" if x == "realised" else "Constant")
 floor = st.sidebar.slider("Spread floor (% p.a.)", 0.0, 0.5, 0.10, 0.01, key="floor", disabled=spread_mode == "constant")
 const = st.sidebar.slider("Constant spread (% p.a.)", 0.05, 2.0, 0.50, 0.05, key="const", disabled=spread_mode == "realised")
 pen = st.sidebar.slider("Shortfall penalty multiplier", 1.0, 6.0, 3.0, 0.5, key="pen")
+pen_basis = st.sidebar.radio("Penalty reading (brief: '3× penalty on any redemption shortfall')", ["spread", "amount"], key="pen_basis",
+                             format_func=lambda x: BASIS_LABEL[x],
+                             help="(a) each ₹ short costs 3× the monthly spread an idle ₹ gives up (same units as idle cost; primary). "
+                                  "(b) each ₹ short costs ₹3 (stress reading).")
 st.sidebar.caption(f"Data through **{S['live_origin']}** (as-of {S['live_as_of']}). Pipeline run {S.get('run_finished_utc', 'n/a')} UTC.")
-kw = dict(spread_mode=spread_mode, floor_pct=floor, const_pct=const, penalty=pen)
+kw = dict(spread_mode=spread_mode, floor_pct=floor, const_pct=const, penalty=pen, penalty_basis=pen_basis)
 
 st.title("Liquid & Overnight fund flows: forecast and cash buffer")
 tabs = st.tabs(["Forecast & buffer", "Backtest vs baseline", "Coverage", "Drivers", "Decision cost", "Data & refresh"])
@@ -158,11 +164,23 @@ with tabs[4]:
     dm = st.multiselect("Models", all_models, default=[m for m in ["sarimax_cal", "ets_ratio", "snaive", "lgbm_q", "lgbm_q_oosq", "sarimax_cal_oosq"] if m in all_models], key="dec_models")
     det = recompute_costs(fc[fc.model.isin(dm)], D["actuals"], D["drivers_monthly"], tau, h_dec, **kw)
     summ = cost_summary(det)
-    st.markdown(f"Policy: buffer = **τ={tau:.3f}** quantile of forecast outflow (h={h_dec}); cost = idle × s/12 + {pen:g} × shortfall × s/12, "
+    pen_txt = f"{pen:g} × shortfall × s/12" if pen_basis == "spread" else f"{pen:g} × shortfall (₹)"
+    st.markdown(f"Penalty reading in use: **{BASIS_LABEL[pen_basis]}**. "
+                f"Policy: buffer = **τ={tau:.3f}** quantile of forecast outflow (h={h_dec}); cost = idle × s/12 + {pen_txt}, "
                 f"s = {'realised FBIL 3M − WACR, floored at %.2f%%' % floor if spread_mode == 'realised' else 'constant %.2f%%' % const}. "
                 "Baseline: hold last year's same-month net outflow.")
     st.dataframe(summ.style.format({c: "{:,.1f}" for c in ["policy_cost_cr", "idle_cr", "shortfall_cr", "baseline_cost_cr"]} |
                                    {"mean_buffer_cr": "{:,.0f}", "vs_baseline_pct": "{:+.1f}%"}), hide_index=True, use_container_width=True)
+    st.markdown("**Both penalty readings at the current settings** (24-month total ₹ crore; policy vs baseline)")
+    both = []
+    for pb in ("spread", "amount"):
+        sb = cost_summary(recompute_costs(fc[fc.model.isin(dm)], D["actuals"], D["drivers_monthly"], tau, h_dec, **(kw | {"penalty_basis": pb})))
+        both.append(sb[["category", "model", "policy_cost_cr", "breaches", "baseline_cost_cr", "vs_baseline_pct"]].assign(reading=BASIS_LABEL[pb]))
+    st.dataframe(pd.concat(both).style.format({"policy_cost_cr": "{:,.1f}", "baseline_cost_cr": "{:,.1f}", "vs_baseline_pct": "{:+.1f}%"}),
+                 hide_index=True, use_container_width=True)
+    st.markdown("**q75 vs q95 under each reading** (pipeline outputs/decision_costs.csv, h=2, realised spread)")
+    st.dataframe(q75_vs_q95(D["decision_costs"], [m for m in dm if m in set(D["decision_costs"].model)]), hide_index=True, use_container_width=True)
+    st.markdown(flip_sentence(D["decision_costs"], [m for m in dm if m in set(D["decision_costs"].model)]))
     curve = cost_curve(fc, D["actuals"], D["drivers_monthly"], h_dec, dm, **kw)
     base_line = curve.groupby(["category", "tau"])["baseline_cost_cr"].first().reset_index()
     cdf = pd.concat([curve[["category", "model", "tau", "policy_cost_cr"]].assign(series="policy"),
@@ -178,7 +196,7 @@ with tabs[4]:
     cat_d = st.selectbox("Monthly detail: category", cats, key="dec_cat"); m_d = st.selectbox("Monthly detail: model", dm or all_models, key="dec_m")
     st.dataframe(det[(det.category == cat_d) & (det.model == m_d)].drop(columns=["model", "category"]).style.format(precision=1, thousands=","), hide_index=True, use_container_width=True)
     st.caption("Recomputed from outputs/forecasts_backtest.csv + actuals.csv + drivers_monthly.csv. At τ=0.75/0.95, h=2, floor 0.10, penalty 3 "
-               "it reproduces outputs/decision_costs.csv (unit-tested).")
+               "it reproduces outputs/decision_costs.csv under both penalty readings (unit-tested).")
 
 # ---------------- 6. data & refresh
 with tabs[5]:

@@ -12,6 +12,8 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt  # noqa: E402
 import pandas as pd  # noqa: E402
 
+from .claims import BASIS_LABEL, PRIMARY_BASIS, penalty_table, vs_baseline_label  # noqa: E402
+
 CORE = ["sarimax_cal", "ets_ratio", "snaive", "snaive_ratio", "lgbm_q"]
 
 
@@ -51,8 +53,17 @@ def build(root: Path, cfg: dict) -> Path:
         rec = L[L.target == dec_month].iloc[0]
         alt = live[(live.category == cat) & (live.target == dec_month) & live.model.isin(CORE)][["model", "point", "buffer_q75", "buffer_q95"]]
         alt_txt = ", ".join(f"{a.model}: {_fmt(a.buffer_q75)}" for a in alt.itertuples())
-        b = boot[(boot.category == cat) & (boot.model == mdl) & (boot.policy == "q75") & (boot.decision_h == dh) & (boot.spread_basis == "fbil3m_minus_wacr")].iloc[0]
-        ds = dsum[(dsum.category == cat) & (dsum.decision_h == dh) & (dsum.spread_basis == "fbil3m_minus_wacr")]
+        bp = boot[boot.penalty_basis == PRIMARY_BASIS] if "penalty_basis" in boot else boot
+        b = bp[(bp.category == cat) & (bp.model == mdl) & (bp.policy == "q75") & (bp.decision_h == dh) & (bp.spread_basis == "fbil3m_minus_wacr")].iloc[0]
+        dp = dsum[dsum.penalty_basis == PRIMARY_BASIS] if "penalty_basis" in dsum else dsum
+        ds = dp[(dp.category == cat) & (dp.decision_h == dh) & (dp.spread_basis == "fbil3m_minus_wacr")]
+        q95_label = vs_baseline_label(boot, cat, mdl, "q95", dh)
+        pen_rows = ""
+        for basis in ("spread", "amount"):
+            pt = penalty_table(dsum, basis, [mdl], dh)
+            pt = pt[pt.category == cat].set_index("policy")
+            pen_rows += (f"<tr><td>{BASIS_LABEL[basis]}</td>" + "".join(f"<td>{pt.loc[p, 'total_cost_cr']:,.1f} ({int(pt.loc[p, 'breaches'])})</td>" for p in ("smly_baseline", "q75", "q95"))
+                         + f"<td>{'q75' if pt.loc['q75', 'total_cost_cr'] < pt.loc['q95', 'total_cost_cr'] else 'q95'}</td></tr>")
         pol = ds[(ds.model == mdl) & (ds.policy == "q75")].iloc[0]; base = ds[ds.policy == "smly_baseline"].iloc[0]
         # chart: history + backtest h=2 band + live fan
         P = panel[panel.category == cat].assign(m=lambda d: pd.PeriodIndex(d.month, freq="M").to_timestamp())
@@ -68,10 +79,11 @@ def build(root: Path, cfg: dict) -> Path:
         blocks.append(f"""
 <section><h2>{cat}</h2>
 <div class=kpi><div><span>Recommended buffer for {dec_month}</span><b>₹{_fmt(rec.buffer_q75)} cr</b><small>75th pct of outflow (newsvendor 3:1), model <code>{mdl}</code></small></div>
-<div><span>Prudent (spec 95th pct)</span><b>₹{_fmt(rec.buffer_q95)} cr</b><small>backtest: costlier than baseline for Liquid</small></div>
+<div><span>Prudent (spec 95th pct)</span><b>₹{_fmt(rec.buffer_q95)} cr</b><small>{q95_label}</small></div>
 <div><span>Naive baseline (last year same month)</span><b>₹{_fmt(rec.baseline_buffer_smly)} cr</b><small>outflow of {pd.Period(dec_month,'M')-12}</small></div>
 <div><span>Backtest cost, q75 vs baseline (24 m)</span><b>₹{pol.total_cost_cr:,.1f} vs {base.total_cost_cr:,.1f} cr</b><small>diff 90% CI [{b.diff_ci90_lo:,.1f}, {b.diff_ci90_hi:,.1f}]; breaches {int(pol.breaches)} vs {int(base.breaches)}</small></div></div>
 <table><tr><th>Month</th><th>h</th><th>Point (₹ cr)</th><th>80% PI</th><th>95% PI</th><th>Buffer q75</th><th>Buffer q95</th><th>Baseline</th></tr>{rows}</table>
+<table class=pen><tr><th>24-month cost ₹cr (breach months), h={dh}, model <code>{mdl}</code></th><th>Baseline</th><th>q75</th><th>q95</th><th>Cheaper</th></tr>{pen_rows}</table>
 <p class=note>Other models' q75 buffer for {dec_month}: {alt_txt}. Source: outputs/live_forecast.csv, decision_costs.csv, decision_vs_baseline_bootstrap.csv.</p>
 <img src="{_img(fig)}"></section>""")
 
@@ -89,7 +101,8 @@ body{{font:13px system-ui,sans-serif;max-width:1100px;margin:16px auto;color:#22
 .kpi{{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}}.kpi div{{background:#f4f6f7;padding:8px;border-radius:6px}}.kpi span{{display:block;font-size:11px;color:#555}}
 .kpi b{{font-size:17px}}.kpi small{{display:block;font-size:10px;color:#666}}table{{border-collapse:collapse;width:100%;margin:6px 0;font-size:12px}}
 td,th{{border-bottom:1px solid #ddd;padding:3px 6px;text-align:right}}td:first-child,th:first-child{{text-align:left}}.note{{font-size:11px;color:#555}}
-section{{border-top:2px solid #264653;margin-top:10px}}img{{max-width:100%}}.grid{{display:grid;grid-template-columns:1fr 1fr;gap:16px}}</style></head><body>
+section{{border-top:2px solid #264653;margin-top:10px}}img{{max-width:100%}}.grid{{display:grid;grid-template-columns:1fr 1fr;gap:16px}}
+@media print{{body{{font-size:10px;margin:0;max-width:none}}img{{max-height:150px}}h2{{margin:4px 0}}section{{margin-top:4px}}table{{font-size:9px;margin:2px 0}}td,th{{padding:1px 4px}}@page{{size:A4;margin:8mm}}}}</style></head><body>
 <h1>Day-1 cash-buffer dashboard — decision for {dec_month}</h1>
 <p class=note>Latest AMFI data: {T} (as-of {summ['live_as_of']}; release date imputed as month-end+13 d where the file has no stamp). Forecasts are category-level AMFI net flows (₹ crore; negative = net outflow).
 Next AMFI release (Oct-2026 data, ~10 Nov 2026) is the h=1 row. Buffers are category-level; scale by the fund's share of category AUM.</p>
