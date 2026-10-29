@@ -89,7 +89,7 @@ def build(root: Path, cfg: dict) -> Path:
 
     # metrics table
     mt = met[met.model.isin(CORE + [m + "_oosq" for m in CORE])].sort_values(["category", "pinball_core_cr"])
-    mrows = "".join(f"<tr><td>{r.category.split()[0]}</td><td>{r.model}</td><td>{r.MAPE_pct:,.0f}%</td><td>{r.medianAPE_pct:,.0f}%</td><td>{_fmt(r.MAE_cr)}</td>"
+    mrows = "".join(f"<tr{'' if r.model in (chosen[r.category], 'snaive') else ' class=np'}><td>{r.category.split()[0]}</td><td>{r.model}</td><td>{r.MAPE_pct:,.0f}%</td><td>{r.medianAPE_pct:,.0f}%</td><td>{_fmt(r.MAE_cr)}</td>"
                     f"<td>{r.MASE:.2f}</td><td>{_fmt(r.pinball_core_cr)}</td><td>{r.cov80:.0%} [{r.cov80_lo:.0%},{r.cov80_hi:.0%}]</td><td>{r.cov95:.0%} [{r.cov95_lo:.0%},{r.cov95_hi:.0%}]</td></tr>"
                     for r in mt.itertuples())
     d = drv.dropna(subset=["wacr"]).iloc[-1]
@@ -102,7 +102,7 @@ body{{font:13px system-ui,sans-serif;max-width:1100px;margin:16px auto;color:#22
 .kpi b{{font-size:17px}}.kpi small{{display:block;font-size:10px;color:#666}}table{{border-collapse:collapse;width:100%;margin:6px 0;font-size:12px}}
 td,th{{border-bottom:1px solid #ddd;padding:3px 6px;text-align:right}}td:first-child,th:first-child{{text-align:left}}.note{{font-size:11px;color:#555}}
 section{{border-top:2px solid #264653;margin-top:10px}}img{{max-width:100%}}.grid{{display:grid;grid-template-columns:1fr 1fr;gap:16px}}
-@media print{{body{{font-size:10px;margin:0;max-width:none}}img{{max-height:150px}}h2{{margin:4px 0}}section{{margin-top:4px}}table{{font-size:9px;margin:2px 0}}td,th{{padding:1px 4px}}@page{{size:A4;margin:8mm}}}}</style></head><body>
+.printonly{{display:none}}@media print{{body{{font-size:8.5px;margin:0;max-width:none;line-height:1.25}}h1{{font-size:14px;margin:0 0 2px}}img{{max-height:100px}}h2{{margin:3px 0;font-size:11px}}h3{{font-size:10px;margin:2px 0}}section{{margin-top:3px}}p{{margin:2px 0}}table{{font-size:7.5px;margin:2px 0}}td,th{{padding:0 3px}}tr.np,.screen{{display:none}}.printonly{{display:block}}@page{{size:A4;margin:8mm}}}}</style></head><body>
 <h1>Day-1 cash-buffer dashboard — decision for {dec_month}</h1>
 <p class=note>Latest AMFI data: {T} (as-of {summ['live_as_of']}; release date imputed as month-end+13 d where the file has no stamp). Forecasts are category-level AMFI net flows (₹ crore; negative = net outflow).
 Next AMFI release (Oct-2026 data, ~10 Nov 2026) is the h=1 row. Buffers are category-level; scale by the fund's share of category AUM.</p>
@@ -112,7 +112,7 @@ Nifty 50 month-end {dsep.nifty_close:,.0f}. Latest partial month {d.month}: WACR
 (HAC regression: Liquid {rc['qe_jun_sep_dec']:+.1f}% of prior AUM in Jun/Sep/Dec, {rc['march_fy_end']:+.1f}% in March, {rc['april']:+.1f}% in April; outputs/driver_regression.csv). Source: data/processed/drivers_monthly.csv.</p></section>
 <section><h2>Backtest (24 targets Oct-2024…Sep-2026, h=1–3 pooled, refit every origin)</h2>
 <table><tr><th>Cat</th><th>Model</th><th>MAPE</th><th>Median APE</th><th>MAE ₹cr</th><th>MASE</th><th>Pinball ₹cr</th><th>Cov 80% [Wilson 95%]</th><th>Cov 95%</th></tr>{mrows}</table>
-<p class=note>Source: outputs/metrics.csv. MAPE is unstable when monthly net flow is near zero; read median APE / MASE / pinball. <code>_oosq</code> = PI from past out-of-sample errors. Model chosen per category by pinball on Oct-24…Sep-25 only (outputs/nested_selection.csv).</p></section>
+<p class="note printonly">Printed copy: selected model and seasonal naive per category; the full table is on screen and in reports/tables_metrics.md.</p><p class=note>Source: outputs/metrics.csv. MAPE is unstable when monthly net flow is near zero; read median APE / MASE / pinball. <code>_oosq</code> = PI from past out-of-sample errors. Model chosen per category by pinball on Oct-24…Sep-25 only (outputs/nested_selection.csv).</p></section>
 <section><h2>Caveats</h2><p class=note>AMFI figures are first releases. Liquidity data for Sep-2026 come from a third-party DBIE mirror to 17-Sep plus 6 official RBI releases; 5 days missing. Idle-cash spread (T-bill − WACR) was at its 0.10% floor in most months, so costs are small in ₹ and rank-sensitive to the floor. Net (not gross) category outflow is used.</p></section>
 </body></html>"""
     p = root / "reports/dashboard.html"
