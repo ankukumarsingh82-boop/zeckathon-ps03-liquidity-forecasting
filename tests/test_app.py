@@ -21,12 +21,13 @@ needs_outputs = pytest.mark.skipif(not (OUT / "run_summary.json").exists(), reas
 @needs_outputs
 @pytest.mark.parametrize("tau,policy", [(0.75, "q75"), (0.95, "q95")])
 @pytest.mark.parametrize("h", [1, 2])
-def test_app_recompute_matches_pipeline_decision_costs(tau, policy, h):
+@pytest.mark.parametrize("basis", ["spread", "amount"])
+def test_app_recompute_matches_pipeline_decision_costs(tau, policy, h, basis):
     D = load_outputs(OUT)
     s = cost_summary(recompute_costs(D["forecasts_backtest"], D["actuals"], D["drivers_monthly"], tau, h,
-                                     "realised", 0.10, 0.5, 3.0))
+                                     "realised", 0.10, 0.5, 3.0, penalty_basis=basis))
     ref = pd.read_csv(OUT / "decision_costs.csv")
-    ref = ref[(ref.decision_h == h) & (ref.spread_basis == "fbil3m_minus_wacr")]
+    ref = ref[(ref.decision_h == h) & (ref.spread_basis == "fbil3m_minus_wacr") & (ref.penalty_basis == basis)]
     m = s.merge(ref[ref.policy == policy], on=["category", "model"], suffixes=("_app", "_pipe"))
     assert len(m) == len(s) > 0
     assert np.allclose(m.policy_cost_cr, m.total_cost_cr)
@@ -58,6 +59,11 @@ def test_streamlit_script_runs_and_sliders_recompute():
     at.radio(key="spread_mode").set_value("constant").run()
     at.slider(key="const").set_value(1.0).run()
     assert not at.exception
+    tables = lambda: [d.value.to_csv() for d in at.dataframe]
+    before = tables()
+    at.radio(key="pen_basis").set_value(at.radio(key="pen_basis").options[1]).run()   # reading (b)
+    assert not at.exception
+    assert tables() != before          # the cost tables change with the penalty reading (buffers do not)
 
 
 def _free_port():

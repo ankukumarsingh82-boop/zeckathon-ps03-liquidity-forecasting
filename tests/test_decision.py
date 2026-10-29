@@ -56,3 +56,17 @@ def test_paired_bootstrap_sign():
     rows += [{"decision_h": 2, "spread_basis": "x", "category": "c", "model": "m", "policy": "q75", "target": m, "total_cost": 7.0} for m in t]
     r = paired_vs_baseline(pd.DataFrame(rows), n_boot=200).iloc[0]
     assert r["total_diff_cr"] == pytest.approx(-72) and r["diff_ci90_hi"] < 0 and r["months_cheaper"] == 24
+
+
+def test_penalty_bases_spread_and_amount():
+    # buffer 1000, outflow 1200, spread 1.2% p.a.: shortfall 200
+    a = cost(1000, 1200, 1.2, 3.0, penalty_basis="spread")
+    b = cost(1000, 1200, 1.2, 3.0, penalty_basis="amount")
+    assert float(a["shortfall_cost"]) == pytest.approx(3 * 200 * 1.2 / 1200)    # (a) 3x spread on the shortfall
+    assert float(b["shortfall_cost"]) == pytest.approx(3 * 200)                 # (b) 3x the shortfall amount, in Rs
+    assert float(cost(1000, 1200, 1.2, 3.0)["shortfall_cost"]) == float(a["shortfall_cost"])   # default = primary (a)
+    # idle cost is the same under both readings
+    assert float(cost(1500, 1200, 1.2, penalty_basis="amount")["idle_cost"]) == pytest.approx(300 * 1.2 / 1200)
+    assert float(cost(1500, 1200, 1.2, penalty_basis="spread")["idle_cost"]) == pytest.approx(300 * 1.2 / 1200)
+    with pytest.raises(ValueError):
+        cost(1000, 1200, 1.2, penalty_basis="rupees")
