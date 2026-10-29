@@ -97,3 +97,29 @@ def report_facts(met: pd.DataFrame, nested: pd.DataFrame, dsum: pd.DataFrame, bo
             f[f"{key}_{pol}_n_ci_excl0_costlier"] = f"{int((gp.diff_ci90_lo > 0).sum())} of {len(gp)}"
             f[f"{key}_{pol}_n_ci_excl0_cheaper"] = f"{int((gp.diff_ci90_hi < 0).sum())} of {len(gp)}"
     return f
+
+
+def submitted_forecasts(live: pd.DataFrame, chosen: dict, rule: str = "nested_selection", horizon: int = 1) -> dict:
+    """The one live figure per category that is labelled 'submitted' (config.yaml `submission`)."""
+    if rule != "nested_selection":
+        raise ValueError(f"unknown submission rule {rule!r}")
+    out = {}
+    for cat, model in chosen.items():
+        r = live[(live.category == cat) & (live.model == model) & (live.h == horizon)]
+        if len(r) != 1:
+            raise ValueError(f"expected one live row for {cat}/{model}/h={horizon}, got {len(r)}")
+        out[cat] = r.iloc[0]
+    return out
+
+
+def submitted_line(r) -> str:
+    month = pd.Period(r["target"], freq="M").strftime("%B %Y")
+    return (f"**Submitted {month} forecast, {r['category']}:** {r['point']:+,.0f} cr "
+            f"(`{r['model']}`, h={int(r['h'])}; 80% PI {r['q_0.1']:,.0f} to {r['q_0.9']:,.0f}; 95% PI {r['q_0.025']:,.0f} to {r['q_0.975']:,.0f})")
+
+
+def ci_sentence(boot: pd.DataFrame, category: str, model: str, policy: str, h: int = 2, basis: str = PRIMARY_BASIS) -> str:
+    r = _sel(boot, h, basis)
+    r = r[(r.category == category) & (r.model == model) & (r.policy == policy)].iloc[0]
+    inc = "includes" if r.diff_ci90_lo <= 0 <= r.diff_ci90_hi else "excludes"
+    return f"90% bootstrap CI of the 24-month difference [{r.diff_ci90_lo:+,.1f}, {r.diff_ci90_hi:+,.1f}] ₹cr {inc} 0"

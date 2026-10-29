@@ -6,6 +6,7 @@ Every number comes from outputs/*.csv (or the rendered report.md). PDFs are rend
 from __future__ import annotations
 
 import json
+import re
 import sys
 from pathlib import Path
 
@@ -20,7 +21,9 @@ import pandas as pd  # noqa: E402
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 from liqfc.appcore import cost_curve  # noqa: E402
-from liqfc.claims import BASIS_LABEL, PRIMARY_BASIS, flip_sentence, q75_vs_q95, vs_baseline_label  # noqa: E402
+import yaml  # noqa: E402
+from liqfc.claims import (BASIS_LABEL, PRIMARY_BASIS, flip_sentence, q75_vs_q95, submitted_forecasts,  # noqa: E402
+                          submitted_line, vs_baseline_label)
 
 O, R = ROOT / "outputs", ROOT / "reports"
 F = R / "figures"
@@ -202,8 +205,14 @@ def deck_pdf(d, figs) -> Path:
         "<p class=note>(a) = 3 × shortfall × spread (primary: same unit as idle cost, critical ratio 0.75). (b) = 3 × shortfall in ₹: about 36,000× the monthly idle carry, so the optimum is ≈ the 99.997th percentile.</p>"))
     rows = [[r.category.split()[0], r.model, r.target, int(r.h), f"{r.point:,.0f}", f"[{r['q_0.1']:,.0f}, {r['q_0.9']:,.0f}]", f"{r.buffer_q75:,.0f}", f"{r.buffer_q95:,.0f}", f"{r.baseline_buffer_smly:,.0f}"]
             for _, r in lv.sort_values(["category", "h"]).iterrows()]
+    sc = yaml.safe_load(open(ROOT / "config.yaml"))["submission"]
+    sub = submitted_forecasts(d["live_forecast"], sel, sc["rule"], sc["horizon"])
+    md2html = lambda t: re.sub(r"`([^`]+)`", r"<code>\1</code>", re.sub(r"\*\*(.+?)\*\*", r"<b>\1</b>", t))
+    subl = "".join(f"<li>{md2html(submitted_line(r))}</li>" for r in sub.values())
     slides.append((f"Live forecast from origin {s['live_origin']}",
-        _t(rows, ["Cat.", "Model", "Month", "h", "Point", "80% PI", "Buffer q75", "Buffer q95", "Baseline"]) + f"<img class=wide src='{figs['live_fan']}'>"))
+        _t(rows, ["Cat.", "Model", "Month", "h", "Point", "80% PI", "Buffer q75", "Buffer q95", "Baseline"]) +
+        f"<ul class=sub>{subl}</ul><p class=note>Rule (config.yaml <code>submission</code>): the h=1 figure of the nested-selection model, the same model that sets the buffer. Overnight's sarimax_cal figure is reference only (report §5).</p>"
+        f"<img class=wide2 src='{figs['live_fan']}'>"))
     slides.append(("What drives the flows",
         f"<img class=wide src='{figs['drivers']}'><ul><li>Calendar effects dominate: advance-tax quarter-ends and March FY-end bring large Liquid outflows; April brings inflows.</li>"
         "<li>Rates, liquidity and equity variables add no out-of-sample accuracy over calendar + lags (LGBM ablation).</li>"
@@ -220,7 +229,7 @@ def deck_pdf(d, figs) -> Path:
 h1{font-size:30px;margin:0 0 14px;color:#123}.big{font-size:20px}ul{font-size:19px;line-height:1.45}
 table{border-collapse:collapse;font-size:14px;margin:6px 0}td,th{border:1px solid #bbb;padding:3px 7px;text-align:right}th{background:#e8eef8}
 td:first-child,td:nth-child(2){text-align:left}.two{display:flex;gap:24px;align-items:flex-start}.two>div{flex:1}.two img{width:100%}
-img.wide{display:block;width:92%;margin:8px auto 0}.note{font-size:14px;color:#555}.pg{position:absolute;right:30px;bottom:16px;font-size:12px;color:#888}"""
+img.wide{display:block;width:92%;margin:8px auto 0}img.wide2{display:block;width:70%;margin:2px auto 0}ul.sub{font-size:15px;margin:4px 0}.note{font-size:14px;color:#555}.pg{position:absolute;right:30px;bottom:16px;font-size:12px;color:#888}"""
     body = "".join(f"<div class=s><h1>{t}</h1>{h}<div class=pg>{i}/{len(slides)}</div></div>" for i, (t, h) in enumerate(slides, 1))
     return html_pdf(f"<!doctype html><meta charset=utf-8><title>PS03 deck</title><style>{css}</style>{body}", R / "deck.pdf")
 

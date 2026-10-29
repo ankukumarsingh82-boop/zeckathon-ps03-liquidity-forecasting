@@ -18,7 +18,9 @@ import pandas as pd
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
-from liqfc.claims import flip_sentence, q75_vs_q95, report_facts, vs_baseline_label  # noqa: E402
+import yaml  # noqa: E402
+from liqfc.claims import (ci_sentence, flip_sentence, q75_vs_q95, report_facts, submitted_forecasts,  # noqa: E402
+                          submitted_line, vs_baseline_label)
 
 O, R = ROOT / "outputs", ROOT / "reports"
 CORE = ["snaive", "snaive_ratio", "ets_ratio", "sarimax_cal", "lgbm_q"]
@@ -40,6 +42,30 @@ def facts() -> dict:
         m = summ["chosen_model_by_nested_selection"][cat]
         f[f"{k}_q95_label"] = vs_baseline_label(boot, cat, m, "q95")
         f[f"{k}_q75_label"] = vs_baseline_label(boot, cat, m, "q75")
+        f[f"{k}_sarimax_q75_ci"] = ci_sentence(boot, cat, "sarimax_cal", "q75")
+        ev = nested[nested.category == cat].sort_values("pinball_core_cr").reset_index(drop=True)
+        for mo in ev.model:
+            f[f"{k}_evalrank_{mo}"] = f"{int(ev.index[ev.model == mo][0]) + 1} of {len(ev)}"
+    # live: the one 'submitted' figure per category (config.yaml `submission`) and the buffers
+    cfg = yaml.safe_load(open(ROOT / "config.yaml"))["submission"]
+    live = pd.read_csv(O / "live_forecast.csv")
+    sub = submitted_forecasts(live, summ["chosen_model_by_nested_selection"], cfg["rule"], cfg["horizon"])
+    for cat, r in sub.items():
+        k = cat.split()[0].lower()
+        f[f"{k}_submitted_line"] = submitted_line(r)
+        f[f"{k}_submitted_model"] = r["model"]
+    for cat in ("Liquid Fund", "Overnight Fund"):
+        k = cat.split()[0].lower()
+        for mo in live[live.category == cat].model.unique():
+            for h in (1, 2, 3):
+                r = live[(live.category == cat) & (live.model == mo) & (live.h == h)].iloc[0]
+                for col in ("point", "buffer_q75", "buffer_q95", "baseline_buffer_smly", "q_0.1", "q_0.9"):
+                    f[f"{k}_{mo}_h{h}_{col}"] = f"{r[col]:+,.0f}" if col == "point" else f"{r[col]:,.0f}"
+    lc = f["liquid_sarimax_q75_ci"]
+    f["liquid_a_ci_note"] = ("The point estimates favour the forecast buffer, but under reading (a) the Liquid gain is not statistically clear: its "
+                             if "includes 0" in lc else "Under reading (a) the Liquid gain is statistically clear: its ") + lc
+    man = pd.read_csv(ROOT / "data/raw/MANIFEST.csv")
+    f["manifest_files"] = str(len(man))
     return f
 
 

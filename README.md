@@ -17,7 +17,7 @@ python -m liqfc refresh                # download new official data, then a full
 python -m liqfc refresh --no-rbi       #   skip the RBI press-release scan (fastest)
 python -m liqfc app                    # interactive dashboard on http://127.0.0.1:8501 (--port N to change)
 python -m liqfc docs                   # reports/report.md (from report_template.md) + figures + report.pdf + deck.pdf (~5 s)
-python -m liqfc test                   # pytest: 55 tests, including a headless launch smoke test (extra args pass through, e.g. -k app)
+python -m liqfc test                   # pytest: 65 tests, including a headless launch smoke test (extra args pass through, e.g. -k app)
 ```
 `make install | run | run-fast | validate | refresh | app | docs | test | smoke` wraps the same commands (`make app PORT=8600`). The Makefile was not exercised on the build machine because it had no `make`; the `python -m liqfc …` commands are the verified path.
 With no subcommand, `python -m liqfc` runs `run`.
@@ -79,6 +79,8 @@ The third-party DBIE WACR/LAF mirror used for history up to 2025 is **not** refr
 
 ## Conventions
 * **Origin T** is the AMFI release of month T. Models see AMFI months ≤ T and driver months whose `available_date` ≤ the release date of T.
+* **Submitted figure:** the one live figure per category labelled *submitted* is the h=1 forecast of the nested-selection model (`config.yaml` → `submission`); see report §5 for why Overnight uses `lgbm_q_oosq`, not `sarimax_cal`.
+* **MANIFEST.csv** records each raw file's retrieval time once. `liqfc run` keeps the recorded time for any file whose sha256 is unchanged, so a run in a fresh clone changes only `outputs/run_summary.json`.
 * **Decision for month M** is made on day 1 of M. The latest AMFI release on that day is M−2, so the buffer uses the **h=2** forecast. h=1 is reported as a sensitivity.
 * **Outflow** O = max(0, −net flow). **Buffer** = τ-quantile of O. The cost uses s = FBIL 3M T-bill − WACR (% p.a., floored at 0.10%):
   idle = max(0, B−O)·s/1200 (₹ crore per month). The "3× penalty" is ambiguous, so both readings are computed (`penalty_basis` column):

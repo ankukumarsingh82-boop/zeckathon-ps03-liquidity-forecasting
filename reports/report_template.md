@@ -2,7 +2,7 @@
 
 _All numbers below are produced by `python -m liqfc run` and rendered from `outputs/*.csv` by `scripts/report_tables.py` and `scripts/build_report.py` (this file is generated from `reports/report_template.md`; the numbers in sentences are filled in from the CSVs). Units are ₹ crore; negative net flow = net outflow._
 
-> **Penalty definition (read this first).** The brief prices decision cost as "yield given up on idle cash + a 3× penalty on any redemption shortfall". This report uses **reading (a), primary:** each rupee short costs **3 × the monthly idle-cash spread** (3 × shortfall × s/1200, where s is FBIL 3M T-bill − WACR, floored at 0.10%). **Reading (b)** charges **3 × the shortfall amount itself** (₹3 per ₹1 short). Both are computed everywhere (`outputs/decision_costs.csv`, column `penalty_basis`; §3a; dashboard). {{fact:flip_sentence}} The forecast-based q75 buffer from `sarimax_cal` beats the naive baseline under **both** readings in both categories (Liquid {{cost:Liquid Fund|sarimax_cal|q75|spread|pct}} / {{cost:Liquid Fund|sarimax_cal|q75|amount|pct}}; Overnight {{cost:Overnight Fund|sarimax_cal|q75|spread|pct}} / {{cost:Overnight Fund|sarimax_cal|q75|amount|pct}}). The choice between q75 and q95 depends on the reading.
+> **Penalty definition (read this first).** The brief prices decision cost as "yield given up on idle cash + a 3× penalty on any redemption shortfall". This report uses **reading (a), primary:** each rupee short costs **3 × the monthly idle-cash spread** (3 × shortfall × s/1200, where s is FBIL 3M T-bill − WACR, floored at 0.10%). **Reading (b)** charges **3 × the shortfall amount itself** (₹3 per ₹1 short). Both are computed everywhere (`outputs/decision_costs.csv`, column `penalty_basis`; §3a; dashboard). {{fact:flip_sentence}} The forecast-based q75 buffer from `sarimax_cal` beats the naive baseline under **both** readings in both categories (Liquid {{cost:Liquid Fund|sarimax_cal|q75|spread|pct}} / {{cost:Liquid Fund|sarimax_cal|q75|amount|pct}}; Overnight {{cost:Overnight Fund|sarimax_cal|q75|spread|pct}} / {{cost:Overnight Fund|sarimax_cal|q75|amount|pct}}). {{fact:liquid_a_ci_note}} (Overnight: {{fact:overnight_sarimax_q75_ci}}). The choice between q75 and q95 depends on the reading.
 
 ## 1. Data
 * **AMFI** monthly reports (official, `amfiindia.com/spages/am{mon}{yyyy}repo.xls`). There are 102 genuine workbooks. 75 are xlsx content saved under a .xls name and 27 are OLE2 xls, so the parser picks the engine from magic bytes. 42 URLs (Jan-2015 to Mar-2018 and Oct-Dec-2026) returned 404 HTML pages. Those pages were not kept, and the loader rejects any non-workbook and logs it.
@@ -12,7 +12,7 @@ _All numbers below are produced by `python -m liqfc run` and rendered from `outp
   * One robust outlier is flagged and kept: Overnight 2019-11.
   * AMFI figures are first releases and are treated as provisional.
 * **Release dates** come from the "Released on" stamp: the lag after month-end is 8 to 13 days. Where a file has no stamp (2019-05, 2020-01, 2021-12 and 2025-09 to 2026-09) the date is set to month-end + 13 days, the maximum observed lag.
-* **Drivers** (`data/raw/MANIFEST.csv` has URL, retrieval time in UTC and IST, sha256 and notes for 311 files):
+* **Drivers** (`data/raw/MANIFEST.csv` has URL, retrieval time in UTC and IST, sha256 and notes for {{fact:manifest_files}} files):
   * WACR: RBI daily call rates.
   * Net LAF liquidity: RBI Money Market Operations "net liquidity from today's operations", from Jul-2020 onward.
   * FBIL 3M T-bill benchmark: official public archive.
@@ -114,15 +114,17 @@ Per-horizon detail: reports/tables_by_h.md. Nested selection:
 All models' live forecasts: `reports/tables_live.md`.
 
 **Recommended buffer for November 2026** (decision on 1-Nov using the h=2 forecast, q75 policy under penalty reading (a); q95 if reading (b) applies):
-* **Liquid:** ₹14,697 cr from `sarimax_cal`. The prudent q95 is ₹64,892 cr; the baseline is ₹14,051 cr.
-* **Overnight:** ₹21,627 cr from `lgbm_q_oosq`, the nested-selection pick. The `sarimax_cal` alternative is ₹14,745 cr and the baseline is ₹37,625 cr.
+* **Liquid:** ₹{{fact:liquid_sarimax_cal_h2_buffer_q75}} cr from `sarimax_cal`. The q95 buffer is ₹{{fact:liquid_sarimax_cal_h2_buffer_q95}} cr; the baseline is ₹{{fact:liquid_sarimax_cal_h2_baseline_buffer_smly}} cr.
+* **Overnight:** ₹{{fact:overnight_lgbm_q_oosq_h2_buffer_q75}} cr from `lgbm_q_oosq`, the nested-selection pick. The q95 buffer is ₹{{fact:overnight_lgbm_q_oosq_h2_buffer_q95}} cr; `sarimax_cal` would give ₹{{fact:overnight_sarimax_cal_h2_buffer_q75}} cr; the baseline is ₹{{fact:overnight_lgbm_q_oosq_h2_baseline_buffer_smly}} cr.
 
-**Tie-breaker point forecast for October 2026** (h=1, `sarimax_cal`):
-* Liquid: +61,681 cr (80% PI −361 to 123,722).
-* Overnight: +18,003 cr (80% PI −4,490 to 40,496).
-* The selected Overnight model gives +6,510 cr.
+**October 2026 point forecast (one figure per category).** Rule, stated in `config.yaml` (`submission: rule: nested_selection, horizon: 1`) on 29-Oct-2026, before AMFI publishes October data (~10-Nov): each category's figure is the h=1 forecast of the model chosen by nested selection, the same model that sets the buffer.
 
-December, an advance-tax month, is expected to see a large Liquid outflow: −68,770 cr, with a q75 buffer of ₹1.04 lakh cr.
+* {{fact:liquid_submitted_line}}
+* {{fact:overnight_submitted_line}}
+
+**Why `lgbm_q_oosq` and not `sarimax_cal` for Overnight.** Nested selection picked `lgbm_q_oosq` on Oct-2024 to Sep-2025. On the later evaluation window it ranks {{fact:overnight_evalrank_lgbm_q_oosq}} and `sarimax_cal` ranks {{fact:overnight_evalrank_sarimax_cal}}. Switching to `sarimax_cal` because it did better on the evaluation window would mean choosing on the window that is meant to stay untouched, which is what nested selection exists to prevent. v0.2 quoted `sarimax_cal` for both categories without a stated rule; that is withdrawn. For reference only, `sarimax_cal` gives {{fact:overnight_sarimax_cal_h1_point}} cr for Overnight October (80% PI {{fact:overnight_sarimax_cal_h1_q_0.1}} to {{fact:overnight_sarimax_cal_h1_q_0.9}}).
+
+December, an advance-tax month, is expected to see a large Liquid outflow: {{fact:liquid_sarimax_cal_h3_point}} cr, with a q75 buffer of ₹{{fact:liquid_sarimax_cal_h3_buffer_q75}} cr.
 
 ## 6. Data gaps and risks
 * AMFI data are first releases, and 16 release dates are imputed (month-end + 13 d).
@@ -154,7 +156,7 @@ Other auditor points:
 * The baseline uses actual(t−12): `test_policy_and_smly_baseline_use_actual_t_minus_12`.
 
 ## 8. Next steps
-1. Score the Oct-2026 tie-breaker forecast when AMFI publishes it (~10-Nov), and extend the evaluation with gross redemptions (a fund-level buffer needs gross, not net, flows).
+1. Score the October 2026 figures in §5 when AMFI publishes it (~10-Nov), and extend the evaluation with gross redemptions (a fund-level buffer needs gross, not net, flows).
 2. Use a longer selection window (or forecast combination of `sarimax_cal` + `snaive_ratio`) in place of 12-month nested selection, which proved unstable for Overnight. Also add day-of-month intramonth timing of advance-tax outflows (around the 15th) for intra-month buffers.
 3. Replace the third-party DBIE mirror with direct RBI DBIE downloads, and fill the 5 missing September days from RBI weekly statistical supplements.
 
